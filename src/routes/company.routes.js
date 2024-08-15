@@ -1,7 +1,8 @@
 import express from "express";
 import multer from "multer";
-const router = express.Router();
 import { companyController } from "../controllers/index.js";
+
+const router = express.Router();
 
 router.get("/", companyController.getCompanies);
 

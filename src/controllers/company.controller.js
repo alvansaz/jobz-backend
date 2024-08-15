@@ -1,55 +1,35 @@
-import { companyModel } from "../models/index.js";
+import Company from '../models/company.model.js';
 
-const getCompanies = async (req, res) => {
+async function getCompanies(req, res) {
   try {
-    const companies = await companyModel.getCompanies();
-    res.status(200).json(companies);
+    const companies = await Company.find();
+    res.json(companies);
   } catch (error) {
-    console.error("Error getting companies:", error);
-    res.status(500).json({ error: "Failed to get companies" });
+    res.status(500).json({ error: error.message });
   }
-};
+}
 
-const getCompanyById = async (req, res) => {
+async function getCompanyById(req, res) {
   try {
-    const companyId = req.params.id;
-
-    const company = await companyModel.getCompanyById(companyId);
-
+    const company = await Company.findById(req.params.id);
     if (!company) {
-      return res.status(404).json({ error: "Company not found" });
+      return res.status(404).json({ error: 'Company not found' });
     }
-
-    res.status(200).json(company);
+    res.json(company);
   } catch (error) {
-    console.error("Error getting company:", error);
-    res.status(500).json({ error: "Failed to get company" });
+    res.status(500).json({ error: error.message });
   }
-};
+}
 
-const createCompany = async (req, res) => {
+async function createCompany(req, res) {
   try {
-    console.log("File:", req.file);
-    const companyData = req.body;
-    console.log("Company data:", companyData);
-    const logo = req.file;
-    // Access file information
-    const logoPath = logo.path; // Path to the stored file
-    const logoFilename = logo.filename;
-    const newCompany = await companyModel.createCompany({
-      ...companyData,
-      logo: req.file.path, // Store the file ID in the database
-    });
-    console.log("New company:", newCompany);
-
-    res.status(201).json(newCompany);
+    const company = new Company(req.body);
+    await company.save();
+    res.status(201).json(company);
   } catch (error) {
-    console.error("Error creating company:", error); // Log the error
-    res.status(500).json({ error: "Failed to create company" });
+    res.status(500).json({ error: error.message });
   }
-};
-
-// Add other controller functions for getting, updating, deleting companies as needed
+}
 
 export default {
   getCompanies,

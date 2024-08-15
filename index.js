@@ -1,14 +1,15 @@
 import express from 'express';
 import routes from './src/routes/index.js';
-import { PrismaClient } from '@prisma/client';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
 
 async function main() {
   try {
     // Connect to the database
-    await prisma.$connect();
+    await mongoose.connect(process.env.DATABASE_URL);
     console.log('Connected to the database');
 
     // Middleware

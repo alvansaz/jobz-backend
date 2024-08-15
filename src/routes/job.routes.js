@@ -1,6 +1,7 @@
 import { Router } from "express";
-const router = Router();
 import { jobController } from "../controllers/index.js";
+
+const router = Router();
 
 router.get("/", jobController.getJobs);
 

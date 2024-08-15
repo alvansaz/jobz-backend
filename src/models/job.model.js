@@ -1,62 +1,16 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import mongoose from 'mongoose';
 
-const getJobs = async () => {
-  try {
-    const jobs = await prisma.job.findMany();
-    return jobs;
-  } catch (error) {
-    throw error;
-  }
-};
+const jobSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  seniority: { type: String, required: true },
+  salary: { type: Number, required: true },
+  remotePossibility: { type: Boolean, required: true },
+  immediateRequirement: { type: Boolean, required: true },
+  skills: { type: [String], required: true },
+  description: { type: String, required: true },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
+});
 
-const getJobById = async (jobId) => {
-  try {
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
-    });
-    return job;
-  } catch (error) {
-    throw error;
-  }
-};
+const Job = mongoose.model('Job', jobSchema);
 
-const createJob = async (data) => {
-  try {
-    const job = await prisma.job.create({ data });
-    return job;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updateJob = async (jobId, data) => {
-  try {
-    const job = await prisma.job.update({
-      where: { id: jobId },
-      data,
-    });
-    return job;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const deleteJob = async (jobId) => {
-  try {
-    const job = await prisma.job.delete({
-      where: { id: jobId },
-    });
-    return job;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export default {
-  getJobs,
-  getJobById,
-  createJob,
-  updateJob,
-  deleteJob,
-};
+export default Job;
