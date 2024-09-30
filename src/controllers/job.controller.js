@@ -3,7 +3,10 @@ import Job from "../models/job.model.js";
 
 async function getJobs(req, res) {
   try {
-    const jobs = await Job.find().populate('company');
+    const jobs = await Job.find().populate({
+      path: "companyId",
+      select: "_id title logo",
+    });
     res.status(200).json(jobs);
   } catch (error) {
     console.error("Error getting jobs:", error);
@@ -14,7 +17,7 @@ async function getJobs(req, res) {
 async function getJobById(req, res) {
   try {
     const jobId = req.params.id;
-    const job = await Job.findById(jobId).populate('company');
+    const job = await Job.findById(jobId).populate("company");
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
@@ -55,7 +58,9 @@ async function updateJob(req, res) {
       return res.status(400).json({ error: "Company not found" });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(jobId, jobData, { new: true });
+    const updatedJob = await Job.findByIdAndUpdate(jobId, jobData, {
+      new: true,
+    });
     res.status(200).json(updatedJob);
   } catch (error) {
     console.error("Error updating job:", error);
