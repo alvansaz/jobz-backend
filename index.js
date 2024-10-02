@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import routes from './src/routes/index.js';
 import mongoose from 'mongoose';
+import cors from 'cors';  // Add this line
 
 const app = express();
 
@@ -13,6 +14,7 @@ async function main() {
     console.log('Connected to the database');
 
     // Middleware
+    app.use(cors());  // Add this line to enable CORS for all routes
     app.use(express.json());
     app.use('/uploads', express.static('uploads'));
     app.use('/api', routes);
