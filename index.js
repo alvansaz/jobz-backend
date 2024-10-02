@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-import express from 'express';
-import routes from './src/routes/index.js';
-import mongoose from 'mongoose';
-import cors from 'cors';  // Add this line
+import express from "express";
+import routes from "./src/routes/index.js";
+import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 
@@ -11,13 +11,19 @@ async function main() {
   try {
     // Connect to the database
     await mongoose.connect(process.env.DATABASE_URL);
-    console.log('Connected to the database');
+    console.log("Connected to the database");
 
     // Middleware
-    app.use(cors());  // Add this line to enable CORS for all routes
+    app.use(
+      cors({
+        origin: "*", // This allows all origins
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+      })
+    );
     app.use(express.json());
-    app.use('/uploads', express.static('uploads'));
-    app.use('/api', routes);
+    app.use("/uploads", express.static("uploads"));
+    app.use("/api", routes);
 
     // Start the server
     const port = process.env.PORT || 3000;
@@ -25,7 +31,7 @@ async function main() {
       console.log(`Server is running on port ${port}`);
     });
   } catch (error) {
-    console.error('Error connecting to the database:', error);
+    console.error("Error connecting to the database:", error);
     process.exit(1);
   }
 }
