@@ -17,7 +17,7 @@ async function getJobs(req, res) {
 async function getJobById(req, res) {
   try {
     const jobId = req.params.id;
-    const job = await Job.findById(jobId).populate("company");
+    const job = await Job.findById(jobId).populate("companyId");
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
